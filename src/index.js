@@ -1,3 +1,5 @@
+let getCategoryData;
+
 async function fetchCategoryButton() {
     const response = await fetch('https://openapi.programming-hero.com/api/videos/categories');
     const data = await response.json();
@@ -7,7 +9,12 @@ async function fetchCategoryButton() {
 function fetchCategoryByID(categoryID) {
     fetch(` https://openapi.programming-hero.com/api/videos/category/${categoryID}`)
         .then(response => response.json())
-        .then(data => showCategoryCardToUI(data.data));
+        .then(data => displayData(data.data));
+}
+
+const displayData = data => {
+    getCategoryData = data;
+    showCategoryCardToUI(getCategoryData);
 }
 
 const showCategoryButtonToUI = data => {
@@ -21,6 +28,25 @@ const showCategoryButtonToUI = data => {
         `
         categoryElement.insertAdjacentHTML('beforeend', categoryButton);
     });
+}
+
+const sortCardByView = () => {
+    if (getCategoryData === undefined) {
+        return;
+    }
+
+    for (let category of getCategoryData) {
+        let views = category.others.views.split('K');
+        category.others.views = parseFloat(views[0]);
+    }
+
+    getCategoryData.sort((a, b) => a.others.views - b.others.views);
+
+    for (let category of getCategoryData) {
+        category.others.views = category.others.views + "K";
+    }
+
+    showCategoryCardToUI(getCategoryData);
 }
 
 const formatUploadTime = (seconds) => {
