@@ -14,7 +14,9 @@ function fetchCategoryByID(categoryID) {
         .then(data => displayData(data));
 }
 
+
 const displayData = data => {
+    getCategoryData = [];
     if (data.data.length === 0) {
         showNoDataFound();
     } else {
@@ -38,7 +40,7 @@ const showCategoryButtonToUI = data => {
 }
 
 const sortCardByView = () => {
-    if (getCategoryData === undefined) {
+    if (getCategoryData === undefined || getCategoryData.length === 0) {
         return;
     }
 
